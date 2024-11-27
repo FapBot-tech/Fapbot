@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mutes{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6"><h2>Currently active mutes</h2></div>
+        <div class="col-12 col-sm-6 d-block text-end"><a href="{{ path('mute_create') }}" class="btn btn-primary">Add Mute</a></div>
+    </div>
+
+    <hr/>
+
+    {{ form_start(form) }}
+    <div class="row my-4">
+        <div class="col-12 col-md-6">
+            {{ form_row(form.username) }}
+        </div>
+        <div class="col-12 col-md-6">
+            <button class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+    <hr/>
+
+    {% if mutes is empty %}
+        <p>No active mutes found</p>
+    {% else %}
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Muted by</th>
+                        <th>Reason</th>
+                        <th>Channels</th>
+                        <th colspan="{{ app.user.superAdmin ? '3' : '2' }}">Time left</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for mute in mutes %}
+                    <tr>
+                        <td><a href="{{ path('chat_user', { 'username': mute.username }) }}" data-bs-toggle="tooltip" data-placement="top" title="User history">{{ mute.username }}</a></td>
+                        <td>{{ mute.user.username }}</td>
+                        <td style="max-width: 400px;">{{ mute.reason|nl2br }}</td>
+                        <td>{{ mute.channelsString }} </td>
+                        <td>{{ mute.timeLeft }}</td>
+                        <td><a href="{{ app.user.accessToChannel(mute.channels) ? path('mute_remove', {'id': mute.id}) : '#' }}" class="btn btn-warning {{ app.user.accessToChannel(mute.channels) ? 'btn-disable-click' : 'disabled' }}">Unmute</a></td>
+                        {% if app.user.superAdmin %}
+                            <td><a href="{{ path('mute_delete', {'id': mute.id}) }}" class="btn btn-danger" data-bs-toggle="tooltip" data-placement="top" title="This will remove the user from the database without unmuting them in chat. Can be usefull for incorrect mutes, or deactivated users.">Delete</a></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% use 'bootstrap_4_layout.html.twig' %}
+
+{% block checkbox_row %}
+    <div class="form-check form-switch ps-3 mt-2">
+        {{ form_widget(form) }}
+        {{ form_label(form) }}
+    </div>
+{% endblock checkbox_row %}
+
+{% block choice_row %}
+    <div class="form-group mt-3">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endblock choice_row %}
+
+{% block textarea_row %}
+    <div class="form-group mt-3">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+{% block text_row %}
+    <div class="form-group mt-3">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+{% block integer_row %}
+    <div class="form-group mt-3">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+{% block searchable_channel_row %}
+    <div class="form-group my-3 searchable-dropdown">
+        {{ form_label(form) }}<br/>
+        <div class="input-group mt-2">
+            <input type="text" name="search_input" class="form-control search-input" placeholder="Filter channels" data-target="{{ form.vars.full_name }}">
+            {% if app.user and app.user.chatAdmin %}
+                <span class="input-group-text" id="select_all" data-bs-toggle="tooltip" data-bs-placement="top" title="Select all channels">🔗</span>
+            {% endif %}
+            <span class="input-group-text" id="basic-addon2">🔍</span>
+        </div>
+        <select name="{{ form.vars.full_name }}" multiple="multiple" class="form-control mb-0">
+            {% set options = choices %}
+            {% for group_label, choice in options %}
+                <option value="{{ choice.value }}" data-name="{{ choice.label|lower }}"{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice.label }}</option>
+            {% endfor %}
+        </select>
+        <div class="d-inline small mb-3 text-muted">Selected channel(s): <div id="selectedChannels" class="d-inline"></div></div>
+    </div>
+{% endblock %}
+
+{% block combinable_text_row %}
+    <div class="form-group position-relative mt-3 combinable-text" data-target="{{ form.vars.name }}" data-hidden="{{ form.vars.full_name }}">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        <div class="input-group auto-complete-username mt-2">
+            <span class="input-group-text">@</span>
+            <input type="text" name="{{ form.vars.name }}_1" class="{{ form.vars.name }} form-control" data-lookup="{{ form.vars.name }}_1" data-origin="{{ form.vars.full_name }}">
+            <button class="btn btn-outline-secondary user-search" type="button" data-target="{{ form.vars.name }}_1">🔍</button>
+            <span class="input-group-text {{ form.vars.name }}" >+</span>
+        </div>
+        <div class="results closed"></div>
+    </div>
+    <div class="small mb-3 text-muted hidden mt-0 {{ form.vars.name }}">If you added too many you can leave them empty</div>
+{% endblock %}
+
+{% block username_row %}
+    <div class="form-group position-relative {{ not form.vars.attr or not form.vars.attr.no_label|default(false) ? 'my-3' : 'mb-3' }}">
+        {% if not form.vars.attr or not form.vars.attr.no_label|default(false) %}
+            {{ form_label(form) }}
+        {% endif %}
+        <div class="input-group auto-complete-username {{  not form.vars.attr or not form.vars.attr.no_label|default(false) ? 'mt-2' : '' }}">
+            <span class="input-group-text">@</span>
+            {{ form_widget(form) }}
+        </div>
+        <div class="results closed"></div>
+    </div>
+{% endblock %}
+
+{% block searchable_username_row %}
+    <div class="form-group position-relative {{ not form.vars.attr or not form.vars.attr.no_label|default(false) ? 'my-3' : 'mb-3' }}">
+        {% if not form.vars.attr or not form.vars.attr.no_label|default(false) %}
+            {{ form_label(form) }}
+        {% endif %}
+        <div class="input-group auto-complete-username {{  not form.vars.attr or not form.vars.attr.no_label|default(false) ? 'mt-2' : '' }}">
+            <span class="input-group-text">@</span>
+            {{ form_widget(form, { attr: { 'data-lookup': form.vars.name }}) }}
+            <button class="btn btn-outline-secondary user-search" type="button" data-target="{{ form.vars.name }}">🔍</button>
+        </div>
+        <div class="results closed"></div>
+    </div>
+{% endblock %}
+
+{% block prefilled_reason_row %}
+    <div class="form-group my-3 prefilled-reason">
+        {{ form_label(form) }}<br/>
+        <select name="{{ form.vars.full_name }}-options"  data-options="{{ form.vars.attr['data-reason-list'] }}" class="form-control mb-0">
+            <option value="" selected="selected">Select a reason</option>
+        </select>
+        <div class="input-group">
+            {{ form_widget(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block wysiwyg_area_row %}
+    <div class="form-group my-3">
+        {{ form_label(form) }}<br/>
+        <div id="editor" data-target="{{ form.vars.id }}"></div>
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% for error in form.vars.errors %}
+    {% if error.message == constant('App\\Form\\Validation\\ProblematicUserValidator::ERROR_MESSAGE') %}
+        <div class="modal modal-xl show" data-bs-backdrop="static"  tabindex="-1" id="problematicUserModal" data-username="{{ error.cause.code }}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div id="SearchResultError"></div>
+                        <div class="alert alert-danger my-4" id="WarningMuteTrigger">
+                            This user has had a lot of warnings or mutes recently, please review their mutes and warnings to see if a (longer) mute is appropriate.
+                        </div>
+                        <div class="alert alert-danger my-4 d-none" id="PreviousDeactivation">
+                            <i class="bi bi-exclamation-circle-fill"></i> This user was previously deactivated from the chat, consider deactivating them again. <i class="bi bi-exclamation-circle-fill"></i>
+                        </div>
+                        <div class="row">
+                            <div class="col" id="SearchResultModalCol1">
+                                Total mutes: <div id="MuteCount" class="fw-bold d-inline"></div>
+                                <hr/>
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="SearchResultMuteTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Reason</th>
+                                                <th>Time ago</th>
+                                                <th>Duration</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col" id="SearchResultModalCol2">
+                                Total warnings: <div id="WarningCount" class="fw-bold d-inline"></div>
+                                <hr/>
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="SearchResultWarningTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Reason</th>
+                                                <th>Time ago</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{{ path('chat_user', {'username': error.cause.code }) }}" class="btn btn-outline-danger d-none" id="DeactivateLink">Deactivate now</a>
+                        <a href="{{ path('mute_create', {'username': error.cause.code }) }}" class="btn btn-danger">Mute now</a>
+
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close" id="problematicConfirm">I'm sure</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}

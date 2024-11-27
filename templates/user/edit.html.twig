@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User - edit{% endblock %}
+
+{% block body %}
+    <h2>Edit {{ user.username }}</h2>
+
+    {{ form_start(form) }}
+        {{ form_row(form.username) }}
+        {% if editPassword %}
+            {{ form_row(form.password) }}
+        {% endif %}
+        {{ form_row(form.role) }}
+
+        {% if not user.hasAccessToAllChannels %}
+        {{ form_row(form.channels, {
+            'attr': {
+                'style': 'height: 300px'
+            }
+        }) }}
+        {% endif %}
+        <button class="btn btn-primary btn-disable-click">Save user</button>
+        {% if editPassword %}
+            <a href="{{ path('user_management_delete', { 'id': user.id }) }}" class="btn btn-danger btn-disable-click">Delete user</a>
+        {% endif %}
+    {{ form_end(form) }}
+{% endblock %}

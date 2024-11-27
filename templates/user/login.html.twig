@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card p-5">
+                <h1 class="mb-3">Login</h1>
+
+                <div class="alert alert-info">
+                    This login is only for Chat moderators.
+                </div>
+
+                <form action="{{ path('user_login') }}" method="post" class="form">
+                    <div>
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="_username" class="form-control" />
+                    </div>
+
+                    <div class="mt-3">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="_password"  class="form-control"/>
+                    </div>
+
+
+                    <div class="form-check form-switch my-4">
+                        <input type="checkbox" id="remember_me" name="_remember_me" data-toggle="toggle" class="form-check-input" checked="checked">
+                        <label class="form-check-label" for="remember_me">Stay logged in? *</label>
+                    </div>
+
+                    <input type="hidden" name="_target_path" value="/"/>
+
+                    <a href="{{ path('forgot_password') }}" class="mt-3">Forgot password</a><br/>
+
+                    <button type="submit" class="btn btn-primary mt-5">login</button>
+                </form>
+            </div>
+
+            <div class="alert alert-light small mt-5">* Enabling the 'Stay logged in' option will use a cookie to remember your login for 30 days, if you'd prefer
+                to stay clear of cookies everything remains functional without it but you'll have to login quite often.</div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title %}Announcement - Edit{% endblock %}
+
+{% block body %}
+    <h2>Edit Announcement</h2>
+
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-12 col-md-6">
+            {{ form_row(form.channels) }}
+        </div>
+        <div class="col-12 col-md-6">
+            {{ form_row(form.text) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-12">
+            {{ form_row(form.header) }}
+
+            {{ form_row(form.interval) }}
+        </div>
+        <div class="col-md-6 col-12">
+            {{ form_row(form.links) }}
+        </div>
+    </div>
+    <div class="row d-flex justify-content-end">
+        <div class="col-md-6 col-12 d-flex justify-content-end">
+            <button class="btn btn-primary mt-4 btn-disable-click">Edit Announcement</button>
+            {% if app.user.admin %}
+                <a href="{{ path('announcements_delete', { 'id': announcement.id }) }}" class="btn btn-danger mt-4 ms-2 btn-disable-click">Delete Announcement</a>
+            {% endif %}
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

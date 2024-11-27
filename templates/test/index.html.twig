@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test{% endblock %}
+
+{% block body %}
+    {{ users|length }} users found
+    <table>
+        {% for user in users %}
+        <tr>
+            <td>@{{ user.username }} | {{ user.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Channel - edit{% endblock %}
+
+{% block body %}
+    <h2>Edit {{ channel.name }}</h2>
+
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.identifier) }}
+        <button class="btn btn-primary btn-disable-click">Save channel</button>
+        <a href="{{ path('channel_delete', { 'id': channel.id }) }}" class="btn btn-danger btn-disable-click">Delete channel</a>
+    {{ form_end(form) }}
+{% endblock %}

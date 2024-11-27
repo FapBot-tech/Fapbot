@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Channels{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6"><h2>All Channels</h2></div>
+        <div class="col-12 col-sm-6 d-block text-end"><a href="{{ path('channel_create') }}" class="btn btn-primary">Add channel</a></div>
+    </div>
+
+    {% if not channels is empty %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Identifier</th>
+                    <th>Edit</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for channel in channels %}
+                    <tr>
+                        <td>{{ channel.name }}</td>
+                        <td>{{ channel.identifier}}</td>
+                        <td><a href="{{ path('channel_edit', { 'id': channel.id }) }}" class="btn btn-primary">Edit</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No active channels found</p>
+    {% endif %}
+
+{% endblock %}

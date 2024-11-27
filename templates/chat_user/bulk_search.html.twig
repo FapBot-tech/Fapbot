@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bulk search{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <h2>Bulk search</h2>
+        </div>
+    </div>
+    <hr/>
+
+    {% if results|length >= 1 %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <td>Email</td>
+                        <th>Mute history</th>
+                        <th>Warning history</th>
+                        <th>Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for username, result in results %}
+                    <tr class="{{ result['user'] is null ? 'text-muted table-muted' : '' }}">
+                        <td>
+                            {% if result['correctedUsername'] is not null %}
+                                <span class="text-primary-emphasis">{{ result['correctedUsername'] }}</span>
+                                <span class="text-muted">({{ username }})</span>
+                            {% else %}
+                                {{ username }}
+                            {% endif %}
+                        <td>{{ result['user'] is not null ? result['user'].email : '' }}</td>
+                        <td>
+                            {{ result['muteCount'] }} {% if result['muteCount'] >= 1 %}<a class="text-primary text-decoration-underline" data-bs-toggle="modal" data-bs-target="#mutes-{{ username }}">details</a>{% endif %}
+                        </td>
+                        <td>
+                            {{ result['warningCount'] }} {% if result['warningCount'] >= 1 %}<a class="text-primary text-decoration-underline" data-bs-toggle="modal" data-bs-target="#warnings-{{ username }}">details</a>{% endif %}
+                        </td>
+                        <td>{{ result['user'] is not null ? (result['user'].active == 'true' ? 'Yes' : 'No') : 'Not in chat' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% for username, result in results %}
+                <div class="modal fade" id="mutes-{{ username }}" tabindex="-1" aria-labelledby="mutes-{{ username }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ username }} Mutes</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive rounded-2">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>Reason</th>
+                                            <th>Channel(s)</th>
+                                            <th>Duration</th>
+                                            <th>Time ago</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for mute in result['mutes'] %}
+                                            <tr>
+                                                <td>{{ mute.reason|nl2br }}</td>
+                                                <td>{{ mute.channelsString }}</td>
+                                                <td>{{ mute.duration }}</td>
+                                                <td>{{ mute.timeAgo }}</td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="4" class="table-info">This user has never been muted</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="warnings-{{ username }}" tabindex="-1" aria-labelledby="warnings-{{ username }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ username }} Warnings</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Reason</th>
+                                        <th>Time ago</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for warning in result['warnings'] %}
+                                        <tr>
+                                            <td>{{ warning.reason|nl2br }}</td>
+                                            <td>{{ warning.timeAgo }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3" class="table-info">This user has never been warned</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ form_start(form) }}
+        <div class="row my-4">
+            {{ form_row(form.usernames) }}
+            <button class="btn btn-primary mt-4">Search</button>
+        </div>
+        {{ form_end(form) }}
+    {% endif %}
+
+{% endblock %}

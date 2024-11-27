@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users - Currently online{% endblock %}
+
+{% block body %}
+    <h2>Online users ({{ users.length }})</h2>
+
+    <div class="filter-block">
+        <div class="input-group mb-3">
+            <input type="text" class="filter-input form-control" name="filter-input">
+            <button class="btn btn-outline-secondary user-search" type="button" >🔍</button>
+        </div>
+        <hr/>
+
+        {% for user in users.users %}
+            {% if user.status == 'online' %}
+                {% set badge = 'bg-success-subtle' %}
+                {% set icon = "✅" %}
+            {% elseif user.status == 'away' %}
+                {% set badge = 'bg-warning-subtle' %}
+                {% set icon = "⚠️" %}
+            {% elseif user.status == 'busy' %}
+                {% set badge = 'bg-danger-subtle' %}
+                {% set icon = "⛔️" %}
+            {% else %}
+                {% set badge = 'bg-dark text-light' %}
+                {% set icon = "🫥" %}
+            {% endif %}
+            <div class="mt-2 me-1 d-inline-flex filter-item" data-value="{{ user.username }}">
+                <a href="{{ path('chat_user', { 'username': user.username }) }}">
+                    <span class="badge fs-6 {{ badge }}">{{ icon }} {{ user.username|is_moderator ? '🔨': '' }} {{ user.username }}</span>
+                </a>
+            </div>
+        {% else %}
+            <h1 class="text-danger">No users found</h1>
+        {% endfor %}
+    </div>
+{% endblock %}

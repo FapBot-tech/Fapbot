@@ -1,0 +1,64 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    rocket_chat.auth_token: '%env(resolve:ROCKET_CHAT_AUTH)%'
+    rocket_chat.user_id: 'xxxxx'
+    rocket_chat.base_url: 'https://xxxx/api/v1/'
+    cache_lifespan: 3600
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+            - '../src/Domain'
+            - '../src/Application/RocketChat/Response'
+            - '../src/Application/Mattermost/Response'
+            - '../src/Application/RocketChat/ChatMessage.php'
+            - '../src/Application/Mattermost/ChatMessage.php'
+
+
+    # add more service definitions when explicit configuration is needed
+    App\Application\RocketChat\Connector:
+        arguments:
+            $authToken: '%rocket_chat.auth_token%'
+            $userId: '%rocket_chat.user_id%'
+            $baseUrl: '%rocket_chat.base_url%'
+
+    App\Controller\ChannelController: ~
+    App\Controller\WarningController: ~
+    App\Application\Console\AutomaticUnmute: ~
+
+    App\Application\Mattermost\Connector:
+        arguments:
+            $tokenId: '%mattermost.token_id%'
+            $accessToken: '%mattermost.access_token%'
+            $baseUrl: '%mattermost.base_url%'
+            $redisUrl: '%redis_dsn%'
+
+    App\Application\Mattermost\MatterMostIntegration: ~
+    App\Application\RocketChat\RocketChatIntegration: ~
+
+    App\Application\Chat\IntegrationInterface: '@App\Application\Mattermost\MatterMostIntegration'
+#    App\Application\Chat\IntegrationInterface: '@App\Application\RocketChat\RocketChatIntegration'
+
+    App\Controller\TestController:
+        arguments:
+            $redisUrl: '%redis_dsn%'
+
+imports:
+    - { resource: '../config/repository.yaml' }

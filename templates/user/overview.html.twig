@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6"><h2>All users</h2></div>
+        <div class="col-12 col-sm-6 d-block text-end"><a href="{{ path('user_management_create') }}" class="btn btn-primary btn-disable-click">Add User</a></div>
+    </div>
+
+    {% if not users is empty %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Roles</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.roleString }}</td>
+                        <td><a href="{{ path('user_management_edit', { 'id': user.id }) }}" class="btn btn-primary btn-disable-click">Edit user</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        <p>No active mutes found</p>
+    {% endif %}
+
+{% endblock %}

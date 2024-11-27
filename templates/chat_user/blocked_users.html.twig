@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% set showDevelopmentPage = true %}
+
+{% block title %}Blocked by{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6"><h2>Users that blocked FapBot</h2></div>
+    </div>
+    <hr/>
+
+
+    <div class="row">
+        <div class="col-12">
+            <p>If a user has blocked FapBot we can't send them any warnings or messages, because of this some users might
+            not realize they've been warned or blocked. To avoid any confusion we list these users in the table below, so
+            we can manually contact them.</p>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>Username</td>
+                            <td>Time blocked</td>
+                            <td colspan="2">Last checked</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for block in blockedUsers %}
+                            <tr>
+                                <td>{{ block.username }}</td>
+                                <td>{{ block.timeAgo }}</td>
+                                <td>{{ block.lastChecked }}</td>
+                                <td><a href="{{ path('blocked_user_check', { 'id': block.id }) }}" class="btn btn-outline-warning float-end">Check now</a></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="table-success">So far no users have FapBot blocked</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

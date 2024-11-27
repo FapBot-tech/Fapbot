@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pages - Create{% endblock %}
+
+{% block body %}
+    <h2>Create new page content</h2>
+
+    {{ form_start(form) }}
+        {{ form_row(form.identifier) }}
+        {{ form_row(form.content) }}
+        <button class="btn btn-success btn-disable-click mt-3">Save</button>
+    {{ form_end(form) }}
+{% endblock %}

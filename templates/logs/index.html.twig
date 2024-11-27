@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Logs{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6"><h2>Logs dashboard</h2></div>
+    </div>
+    <hr/>
+
+    <div class="row mb-4">
+        <div class="col-12 col-md-4">
+            <div class="card p-4 bg-warning text-dark">
+                <div class="card-header">
+                    <h4>Failure count</h4>
+                </div>
+                <div class="card-body">
+                    {{ failCount }}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card p-4 bg-success">
+                <div class="card-header">
+                    <h4>Success count</h4>
+                </div>
+                <div class="card-body">
+                    {{ successCount }}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            {% if successPercentage > 99.5 %}
+                {% set classes = 'bg-success text-light' %}
+            {% elseif successPercentage > 99 %}
+                {% set classes = 'bg-warning text-dark' %}
+            {% else %}
+                {% set classes = 'bg-danger text-light' %}
+            {% endif %}
+
+            <div class="card p-4 {{ classes }}">
+                <div class="card-header">
+                    <h4>Success percentage</h4>
+                </div>
+                <div class="card-body">
+                    {{ successPercentage|round(2) }}%
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-12">
+            <h4>Failure Logs</h4>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Response</th>
+                            <th>Message</th>
+                            <th>Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for failLog in failLogs %}
+                        <tr class="custom-collapse" data-toggle-class="open">
+                            <td>{{ failLog.created|date('Y-m-d h:i') }}</td>
+                            <td><pre>{{ failLog.responseObject ? failLog.responseObject|json_encode(constant('JSON_PRETTY_PRINT')) : '' }}</pre></td>
+{#                            <td><pre>{{ dump(failLog.messageObject) }}</pre></td>#}
+                            <td><pre>{{ failLog.messageObject|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></td>
+                            <td class="{{ not failLog.errorMapped ? 'table-danger' }}">{{ failLog.extractedError }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4 mt-md-0">
+        <div class="col-12">
+            <h4>Success Logs</h4>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Response</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for successLog in successLogs %}
+                        <tr class="custom-collapse" data-toggle-class="open">
+                            <td><pre>{{ successLog.responseObject|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></td>
+                            <td><pre>{{ successLog.messageObject|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pages - Create{% endblock %}
+
+{% block body %}
+    <h2>Update new page content: {{ pageContent.identifier }}</h2>
+
+    {{ form_start(form) }}
+        {{ form_row(form.content) }}
+        {{ form_row(form._token) }}
+        <button class="btn btn-success btn-disable-click mt-3">Update</button>
+        <a href="{{ path('page_content_delete', { id: pageContent.id }) }}" class="btn btn-danger btn-disable-click mt-3">Delete</a>
+    {{ form_end(form, { render_rest: false }) }}
+{% endblock %}

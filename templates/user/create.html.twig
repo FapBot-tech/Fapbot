@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User - create{% endblock %}
+
+{% block body %}
+    <h2>Add user</h2>
+
+    {{ form_start(form) }}
+        {{ form_row(form.username) }}
+        {{ form_row(form.password) }}
+        {{ form_row(form.role) }}
+        {{ form_row(form.channels, {
+            'attr': {
+                'style': 'height: 300px'
+            }
+        }) }}
+        <button class="btn btn-success btn-disable-click">Add user</button>
+    {{ form_end(form) }}
+{% endblock %}

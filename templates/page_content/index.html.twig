@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pages{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6"><h2>Page contents</h2></div>
+        {% if canAdd %}
+            <div class="col-12 col-sm-6 d-block text-end"><a href="{{ path('page_content_create') }}" class="btn btn-primary">Create new page content</a></div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <table class="table mt-4">
+            <thead>
+                <tr class="position-sticky top-under-nav">
+                    <th>Content</th>
+                    <th>Creator</th>
+                    <th>Editor</th>
+                    <th colspan="2">Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for pageContent in pageContents %}
+                <tr>
+                    <td style="max-width: 720px; max-height: 200px;">{{ pageContent.content|markdown }}</td>
+                    <td>{{ pageContent.creator.username }}</td>
+                    <td>{{ pageContent.editor is not null ? pageContent.editor.username : '-' }}</td>
+                    <td>{{ pageContent.identifier }}</td>
+                    <td>
+                        <a href="{{ path('page_content_edit', { id: pageContent.id }) }}" class="btn btn-outline-warning">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No pages found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

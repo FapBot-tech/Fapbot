@@ -1,0 +1,226 @@
+index:
+  path: /
+  controller: App\Controller\MuteController::listMutes
+
+mute_create:
+  path: /mute/create
+  controller: App\Controller\MuteController::createMute
+
+mute_remove:
+    path: /mute/{id}/unmute
+    controller: App\Controller\MuteController::unmute
+
+mute_delete:
+  path: /mute/{id}/delete
+  controller: App\Controller\MuteController::remove
+
+user_login:
+  path: /login
+  controller: App\Controller\UserController::login
+
+user_logout:
+  path: /logout
+
+user_management:
+  path: /admin/users
+  controller: App\Controller\UserController::userManagement
+
+user_new_password:
+  path: /user/newPassword
+  controller: App\Controller\UserController::updatePassword
+
+user_management_create:
+  path: /admin/users/create
+  controller: App\Controller\UserController::create
+
+user_management_edit:
+  path: /admin/users/{id}/edit
+  controller: App\Controller\UserController::edit
+
+user_management_delete:
+  path: /admin/users/{id}/delete
+  controller: App\Controller\UserController::delete
+
+channel_list:
+  path: /admin/channel
+  controller: App\Controller\ChannelController::listChannels
+
+channel_create:
+  path: /admin/channel/create
+  controller: App\Controller\ChannelController::create
+
+channel_edit:
+  path: /admin/channel/{id}/edit
+  controller: App\Controller\ChannelController::edit
+
+channel_delete:
+  path: /admin/channel/{id}/delete
+  controller: App\Controller\ChannelController::delete
+
+warning_list:
+  path: /warning/
+  controller: App\Controller\WarningController::list
+
+warning_create:
+  path: /warning/create
+  controller: App\Controller\WarningController::create
+
+warning_delete:
+  path: /warning/{id}/delete
+  controller: App\Controller\WarningController::delete
+
+stats:
+  path: /admin/stats
+  controller: App\Controller\StatsController
+
+announcements:
+  path: /announcements
+  controller: App\Controller\AnnouncementController::listAnnouncements
+
+announcements_create:
+  path: /announcement/create
+  controller: App\Controller\AnnouncementController::create
+
+announcements_edit:
+  path: /announcement/{id}/edit
+  controller: App\Controller\AnnouncementController::edit
+
+announcements_delete:
+  path: /announcements/{id}/delete
+  controller: App\Controller\AnnouncementController::delete
+
+announcements_send:
+  path: /announcements/{id}/send
+  controller: App\Controller\AnnouncementController::sendNow
+
+logs:
+  path: /admin/logs
+  controller: App\Controller\LoggingController
+
+reset_password:
+  path: /reset-password/{id}/{secret}
+  controller: App\Controller\UserController::resetPassword
+
+create_password:
+  path: /create-password/{id}/{secret}
+  controller: App\Controller\UserController::resetPassword
+
+forgot_password:
+  path: /forgot-password
+  controller: App\Controller\UserController::forgotPassword
+
+test:
+  path: /admin/test
+  controller: App\Controller\TestController
+
+chat_user_index:
+  path: /chat_user
+  controller: App\Controller\ChatUserController::index
+
+chat_user_online:
+  path: /chat_user/online
+  controller: App\Controller\ChatUserController::onlineUsers
+
+chat_user:
+  path: /chat_user/{username}
+  controller: App\Controller\ChatUserController::user
+
+chat_user_json:
+  path: /chat_user/{username}/json
+  controller: App\Controller\ChatUserController::asJson
+
+blocked_user:
+  path: /admin/blocked_users
+  controller: App\Controller\BlockedUserController::index
+
+blocked_user_check:
+  path: /admin/blocked_users/{id}
+  controller: App\Controller\BlockedUserController::checkUser
+
+reason:
+  path: /admin/reasons
+  controller: App\Controller\ReasonController::index
+
+reason_create:
+    path: /admin/reasons/create
+    controller: App\Controller\ReasonController::create
+
+reason_edit:
+    path: /admin/reasons/{id}/edit
+    controller: App\Controller\ReasonController::update
+
+reason_delete:
+    path: /admin/reasons/{id}/delete
+    controller: App\Controller\ReasonController::delete
+
+chat_message_lookup:
+  path: /message_activity
+  controller: App\Controller\MessageSearchController
+
+chat_message_delete:
+  path: /admin/message_activity/{username}/delete/{messageId}/{channelId}
+  controller: App\Controller\MessageSearchController::deleteMessage
+
+guide_content:
+  path: /guide/{identifier}
+  controller: App\Controller\GuideController::getContent
+
+webhook:
+  path: /webhook
+  controller: App\Controller\WebhookController
+
+webhook_command:
+  path: /webhook/{command}
+  controller: App\Controller\WebhookController
+
+reports:
+  path: /admin/reports
+  controller: App\Controller\ReportsController::index
+
+reports_dismiss:
+  path: /admin/reports/{userId}/dismiss
+  controller: App\Controller\ReportsController::dismiss
+
+reports_delete:
+    path: /admin/reports/{userId}/delete
+    controller: App\Controller\ReportsController::delete
+
+bulk_search:
+  path: /admin/bulk_search
+  controller: App\Controller\ChatUserController::bulkSearch
+
+chat_message_lookup_user_channel:
+  path: /message_activity/{username}/{channelId}
+  controller: App\Controller\MessageSearchController::getJsonMessagesForUserAndChannel
+
+auto_complete_username:
+  path: /chat_user/autocomplete/{partialUsername}
+  controller: App\Controller\ChatUserController::autoCompleteUsername
+
+plugin_mute_list:
+  path: /plugin/mute_list
+  controller: App\Controller\PluginController
+
+plugin_channel_users:
+  path: /plugin/channel/{id}/users
+  controller: App\Controller\PluginController::channelUsers
+
+chat_user_report:
+  path: /report
+  controller: App\Controller\UserReportController
+
+page_content_index:
+  path: /admin/page_content
+  controller: App\Controller\PageContentController::index
+
+page_content_create:
+  path: /admin/page_content/create
+  controller: App\Controller\PageContentController::create
+
+page_content_edit:
+  path: /admin/page_content/{id}/edit
+  controller: App\Controller\PageContentController::update
+
+page_content_delete:
+  path: /admin/page_content/{id}/delete
+  controller: App\Controller\PageContentController::delete

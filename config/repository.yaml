@@ -1,0 +1,50 @@
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: true
+    bind:
+      $cacheLifespan: '%cache_lifespan%'
+
+  App\Entity\Repository\AnnouncementRepository:
+    arguments:
+      $entityClass: App\Entity\Announcement
+
+  App\Entity\Repository\ChannelRepository:
+    arguments:
+      $entityClass: App\Entity\Channel
+
+  App\Entity\Repository\MuteRepository:
+    arguments:
+      $entityClass: App\Entity\Mute
+
+  App\Entity\Repository\WarningRepository:
+    arguments:
+      $entityClass: App\Entity\Warning
+
+  App\Entity\Repository\ApiLogRepository:
+    arguments:
+      $entityClass: App\Entity\ApiLog
+
+  App\Entity\Repository\BlockedUserRepository:
+    arguments:
+      $entityClass: App\Entity\BlockedUser
+
+  App\Entity\Repository\ReasonRepository:
+    arguments:
+      $entityClass: App\Entity\Reason
+
+  App\Entity\Repository\LastExecuteRepository:
+    arguments:
+      $entityClass: App\Entity\LastExecute
+
+  App\Entity\Repository\ReportRepository:
+    arguments:
+      $entityClass: App\Entity\Report
+
+  App\Entity\Repository\PageContentRepository:
+    arguments:
+      $entityClass: App\Entity\PageContent
+
+  App\Entity\Repository\UserRepository: ~

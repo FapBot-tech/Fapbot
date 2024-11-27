@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reasons{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6"><h2>Prefilled reasons</h2></div>
+        <div class="col-12 col-sm-6 d-block text-end"><a href="{{ path('reason_create') }}" class="btn btn-primary">Add prefilled reason</a></div>
+    </div>
+
+    <hr/>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th colspan="2">Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reason in reasons %}
+                <tr>
+                    <td style="width: 300px;">{{ reason.name }}</td>
+                    <td>{{ reason.reason|nl2br }}</td>
+                    <td>
+                        <a href="{{ path('reason_edit', { 'id': reason.id }) }}" class="btn btn-outline-warning">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No reasons found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

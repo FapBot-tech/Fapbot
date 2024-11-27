@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FapBot - Guide{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <div class="pt-4">
+                {{ pageContent.content|markdown }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

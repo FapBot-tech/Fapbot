@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mute - history{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6"><h2>All {{ username }}'s mutes {{ history|length > 0 ? '('~history|length~')' : '' }}</h2></div>
+        <div class="col-12 col-sm-6 d-flex justify-content-end"><a href="{{ path('mute_create') }}" class="btn btn-primary">Add Mute</a></div>
+    </div>
+
+    {% if history|length > 0 %}
+        <form method="get" class="form-inline">
+            <div class="row my-4">
+                <div class="col-6 col-md-4">
+                    <div class="row">
+                        <div class="col-auto">
+                            <input name="search" type="text" placeholder="Username" class="form-control" value="{{ searchTerm is defined ? searchTerm : '' }}">
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <hr/>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Duration</th>
+                    <th>Channels</th>
+                    <th>Reason</th>
+                    <th>By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mute in history %}
+                    <tr>
+                        <td>{{ mute.created|date('Y-m-d H:i') }}</td>
+                        <td>{{ mute.duration }}</td>
+                        <td>{{ mute.channelsString }}</td>
+                        <td>{{ mute.reason }}</td>
+                        <td>{{ mute.user.username }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No mute history found for this user</p>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Stats{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12 col-md-4">
+            <div class="card" >
+                <div class="card-body">
+                    <h5 class="card-title">Mutes in the last 24 hours</h5>
+                    <p class="card-text">{{ mutesLastDay }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="card" >
+                <div class="card-body">
+                    <h5 class="card-title">Mutes in the last 7 days</h5>
+                    <p class="card-text">{{ mutesLastWeek}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="card" >
+                <div class="card-body">
+                    <h5 class="card-title">Mutes in the last month</h5>
+                    <p class="card-text">{{ mutesLastMonth }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-sm-12 col-md-4">
+            <div class="card" >
+                <div class="card-body">
+                    <h5 class="card-title">Warnings in the last 24 hours</h5>
+                    <p class="card-text">{{ warningsLastDay }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="card" >
+                <div class="card-body">
+                    <h5 class="card-title">Warnings in the last 7 days</h5>
+                    <p class="card-text">{{ warningsLastWeek}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="card" >
+                <div class="card-body">
+                    <h5 class="card-title">Warnings in the last month</h5>
+                    <p class="card-text">{{ warningsLastMonth }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row mt-5">
+        <div class="col-12 col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Top 10 most muted channels</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Channel</th>
+                                <th>Users muted</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for channel, count in muteChannels %}
+                                <tr>
+                                    <td>{{ channel }}</td>
+                                    <td>{{ count }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="2">No mutes in the last month</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Top 10 most muted users this month</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Times muted</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for mute in muteUsers %}
+                                <tr>
+                                    <td><a href="{{ path('chat_user', { 'username': mute.userName }) }}">{{ mute.userName }}</a></td>
+                                    <td>{{ mute.count }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="2">No mutes in the last month</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Top 10 most warned channels this month</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Channel</th>
+                                    <th>Times warned</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for channel in channelWarnings %}
+                                    <tr>
+                                        <td>{{ channel.channelId|channel_name }}</td>
+                                        <td>{{ channel.count }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2">No warnings in the last month</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Top 10 most warned users this month</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Times warned</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in userWarnings %}
+                                <tr>
+                                    <td><a href="{{ path('chat_user', { 'username': user.userName }) }}">{{ user.userName }}</a></td>
+                                    <td>{{ user.count }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="2">No warnings in the last month</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

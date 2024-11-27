@@ -1,0 +1,59 @@
+security:
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        users_in_memory: { memory: null }
+
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+
+            form_login:
+                login_path: user_login
+                check_path: user_login
+            logout:
+                path: user_logout
+            remember_me:
+                secret: '%kernel.secret%' # required
+                lifetime: 2592000 # 1 week in seconds
+                # by default, the feature is enabled by checking a
+                # checkbox in the login form (see below), uncomment the
+                # following line to always enable it.
+                #always_remember_me: true
+
+    role_hierarchy:
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+        ROLE_ADMIN: ROLE_CHAT_ADMIN
+        ROLE_CHAT_ADMIN: ROLE_CHAT_MODERATOR
+        ROLE_CHAT_MODERATOR: ROLE_USER
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#the-firewall
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+         - { path: ^/admin, roles: ROLE_CHAT_ADMIN }
+         - { path: ^/webhook, roles: PUBLIC_ACCESS }
+         - { path: ^/login, roles: PUBLIC_ACCESS   }
+         - { path: ^/reset-password/?, roles: PUBLIC_ACCESS   }
+         - { path: ^/create-password/?, roles: PUBLIC_ACCESS   }
+         - { path: ^/chat_user/autocomplete/?, roles: PUBLIC_ACCESS   }
+         - { path: ^/forgot-password, roles: PUBLIC_ACCESS   }
+         - { path: ^/report, roles: PUBLIC_ACCESS   }
+         - { path: ^/plugin, roles: PUBLIC_ACCESS }
+         - { path: ^/, roles: ROLE_USER }
+         - { path: ^/robot.png, roles: PUBLIC_ACCESS }

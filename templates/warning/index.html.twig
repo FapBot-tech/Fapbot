@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Warnings{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6"><h2>{{ searchTerm is defined ? searchTerm ~ "'s warnings" : 'Most recent warnings' }}</h2></div>
+        <div class="col-12 col-sm-6 d-block text-end"><a href="{{ path('warning_create') }}" class="btn btn-primary float-right">Add warning</a></div>
+    </div>
+    <hr/>
+
+    {% if warnings is empty %}
+        <p>No active warnings found</p>
+    {% else %}
+        {{ form_start(form) }}
+        <div class="row my-4">
+            <div class="col-12 col-md-6">
+                {{ form_row(form.username) }}
+            </div>
+            <div class="col-12 col-md-6">
+                <button class="btn btn-primary">Search</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+
+        <hr/>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Username / Channel</th>
+                        <th>Warned by</th>
+                        <th colspan="2">Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for warning in warnings %}
+                    <tr>
+                        <td>
+                            {% if warning.username is not null %}
+                                <a href="{{ path("chat_user", {'username': warning.username ?? warning.channelId}) }}" data-bs-toggle="tooltip" data-placement="top" title="Mute history">
+                            {% endif %}
+                                {{ warning.userName ?? warning.channelId|channel_name }}
+                            {% if warning.username is not null %}
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td>{{ warning.user.username }}</td>
+                        <td>{{ warning.reason|nl2br }}</td>
+                        <td><a href="{{ path('warning_delete', {'id': warning.id}) }}" class="btn btn-warning btn-disable-click">Remove</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}

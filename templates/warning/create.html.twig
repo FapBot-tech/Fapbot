@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block title %}Warning - create{% endblock %}
+
+{% block body %}
+    <h2>Add warning</h2>
+
+    <div class="row mb-4">
+        <h5>Please read before you sent your first warning</h5><br/>
+        <a href="{{ path('guide_content', { 'identifier': 'guide_index'}) }}#warnings">Guidebook</a>
+    </div>
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="row">
+        <div class="col-12 col-md-6">
+            {{ form_row(form.channels) }}
+        </div>
+        <div class="col-12 col-md-6">
+            {{ form_row(form.username) }}
+
+            {{ form_row(form.reason) }}
+            {{ form_row(form.informUser) }}
+            {% if app.user.isAdmin %}
+                <div class="switch">
+                    {{ form_row(form.informTeam) }}
+                </div>
+            {% endif %}
+
+            <div class="small text-muted mt-4">* Messages will be sent to all Channels and Usernames selected (can cause spam if many channels are selected)</div>
+            <button class="btn btn-success mt-1 mb-5 btn-disable-click">Send warning</button>
+            {% if form.vars.errors|length >= 1 %}
+                {% set shown = false %}
+                {% for error in form.vars.errors %}
+                    {% if error.message == constant('App\\Form\\Validation\\ProblematicUserValidator::ERROR_MESSAGE') and not shown %}
+                        {% set shown = true %}
+                        <button type="button" class="btn btn-warning mt-1 mb-5" id="problematicConfirmSubmit">Force send!</button>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+    {{ include('_problematic_user_modal.html.twig') }}
+{% endblock %}

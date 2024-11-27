@@ -1,0 +1,36 @@
+{% apply spaceless %}
+{% apply inline_css %}
+    <style>
+        #message {
+            background-color: rgb(175, 200, 185);
+            padding: 20px 30px;
+            border-radius: 5px;
+        }
+        h2 { text-align: center; }
+        a { color: blue; }
+    </style>
+    <div id="message">
+        <h2>You've been invited to FapBot! 🥳</h2>
+        <hr/>
+        <p>
+            <strong>Hi {{ user.username }},</strong>
+            We'd like to welcome you to the moderation team!<br/>
+            It can be quite a lot to keep track of which user was muted or warned on what days and what for,
+            to make this part of our job easier, we have FapBot. <br/>
+            <br/>
+            FapBot can be used to mute and warn users, it'll automatically unmute users, inform you when a troublesome
+            user has gotten a lot of warnings, and it allows you to look of the user history.<br/>
+            <br/>
+            <strong>Accessing FapBot</strong><br/>
+            Website: <a href="https://fapbot.tech/{{ path('user_login') }}">https://fapbot.tech/{{ path('user_login') }}</a><br/>
+            Username: {{ user.username }}<br/>
+            <br/>
+            You can create your first password by clicking on this link: <a href="#">#</a><br/>
+            <br/>
+            <strong>Getting started</strong><br/>
+            Once you've logged in you'll have access to the guide where you can find all the ins and outs of using
+            FapBot. Once you read through that try muting and warning yourself, you can always unmute early.<br/>
+        </p>
+    </div>
+{% endapply %}
+{% endapply %}

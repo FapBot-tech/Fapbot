@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title %}Announcement - create{% endblock %}
+
+{% block body %}
+    <h2>Add Announcement</h2>
+
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-12 col-md-6">
+            {{ form_row(form.channels) }}
+        </div>
+        <div class="col-12 col-md-6">
+            {{ form_row(form.text) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-12">
+            {{ form_row(form.header) }}
+            {{ form_row(form.interval) }}
+        </div>
+        <div class="col-md-6 col-12">
+            {{ form_row(form.links) }}
+        </div>
+    </div>
+    <div class="row d-flex justify-content-end">
+        <div class="col-md-6 col-12 d-flex justify-content-end">
+            <button class="btn btn-success mt-4 btn-disable-click">Create Announcement</button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+    <div class="row" >
+        <div class="col">
+            <div class="my-4 text-end">
+                Before you create your first announcement
+                <a href="{{ path('guide_content', { 'identifier': 'guide_index'}) }}#announcements">Read the guide</a>
+            </div>
+
+            <div class="alert alert-info my-5">
+                When an announcement is created it'll be scheduled after the next interval rounded up to the nearest 15 minutes (current time + interval rounded up).
+                If you want it to be scheduled at the next full hour set the interval initially to whatever time is remaining to the next hour
+                (at 09:10 am this would be 45 minutes, at 09:43am this would be 15 minutes, at 09:54 this would be 1 hour etc.).
+                After creating it you can edit it straight away to the correct interval.<br/>
+                <br/>
+                You can also ignore these steps if you don't care about it being sent on the hour exactly.
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reasons - Edit{% endblock %}
+
+{% block body %}
+    <h2>Create Prefilled reason</h2>
+
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.reason) }}
+        <button class="btn btn-success btn-disable-click mt-3">Save</button>
+        <a href="{{ path('reason_delete', { 'id': reason.id }) }}" class="btn btn-danger btn-disable-click mt-3 float-end">Delete</a>
+    {{ form_end(form) }}
+{% endblock %}

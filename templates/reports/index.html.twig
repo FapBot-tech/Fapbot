@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reports{% endblock %}
+
+{% block body %}
+    <script>
+        function fetchImage(location, divId) {
+            let getBase64Image = async res => {
+                const blob = await res.blob();
+
+                const reader = new FileReader();
+
+                await new Promise((resolve, reject) => {
+                    reader.onload = resolve;
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+                return reader.result;
+            };
+
+            fetch(location, {
+                headers: {
+                    Authorization: "IfGsZpzotxjMquzU-EwVFw_aGxhxNaY5AJ1G_I1mYjs",
+                },
+            })
+                .then(result => getBase64Image(result))
+                .then(imgString => {
+                    document.getElementById(divId).src = imgString;
+                });
+        }
+    </script>
+
+    {% for report in reports.reports %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="card-title">@{{ report.username }}</div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex mb-3">
+                    <a href="{{ path('reports_dismiss', { 'userId': report.userId }) }}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Hides the report for other mods without doing anything">Dismiss report</a>
+                    <div class="dropdown">
+                        <button class="ms-3 btn btn-outline-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Delete messages
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('reports_delete', { 'userId': report.userId }) }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Deletes the reported messages">Delete</a></li>
+                            <li><a class="dropdown-item" href="{{ path('reports_delete', { 'userId': report.userId, 'mute': report.username }) }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Deletes the reported messages and opens the create mute page">Delete and mute</a></li>
+                            <li><a class="dropdown-item" href="{{ path('reports_delete', { 'userId': report.userId, 'warn': report.username }) }}" data-bs-toggle="tooltip" data-bs-placement="right" title="Deletes the reported messages and opens the create warning page">Delete and warn</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card card-body">
+                    {% for message in report.messages %}
+                        <table class="table">
+                            <tr>
+                                <th>Message:</th>
+                                <td>
+                                    {% if message.isImage %}
+                                        <img id="{{ message._id }}" alt="Uploaded image" class="img-size" src="{{ message.image }}" data-bs-toggle="modal" data-bs-target="#modal-{{ report.username }}">
+                                        <div class="modal fade" id="modal-{{ report.username }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                        {% if message.msg != '' %}
+                                                            {% apply markdown_to_html %}
+                                                                {{ message.msg|nl2br }}
+                                                            {% endapply %}
+                                                        {% endif %}
+                                                        <img id="{{ message._id }}" class="img-zoomable" alt="Uploaded image" src="{{ message.image }}">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        {% if message.msg == '' %}
+                                            Uploaded image
+                                        {% else %}
+                                            {% apply markdown_to_html %}
+                                                {{ message.msg|nl2br }}
+                                            {% endapply %}
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Channel:</th>
+                                <td>
+                                    {{ report.roomName }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Reported by:</th>
+                                <td>
+                                    {% for rep in message.reports %}
+                                        {{ rep.reportedBy }} ({{ rep.description|default('No reason provided') }}){% if not loop.last %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </table>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="card bg-success-subtle">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h4 class="align-self-center">No open reports found 🥳</h4>
+                    <button class="btn btn-outline-light" onclick="window.location.reload()">Refresh</button>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

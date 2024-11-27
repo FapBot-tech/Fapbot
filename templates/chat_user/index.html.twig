@@ -1,0 +1,239 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User lookup{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <h2>
+                {% if user is defined and user is not null %}
+                    {% if user.usernameCorrected %}
+                        <span class="text-warning">{{ user.username }}</span> <span class="small text-secondary">({{ username }})</span>
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+
+                    {% if user.status == 'online' %}
+                        {% set badge = 'bg-success' %}
+                        {% set icon = "✅" %}
+                        {% set status = 'Online' %}
+                    {% elseif user.status == 'away' %}
+                        {% set badge = 'bg-warning' %}
+                        {% set icon = "⚠️" %}
+                        {% set status = 'Away' %}
+                    {% elseif user.status == 'busy' %}
+                        {% set badge = 'bg-danger' %}
+                        {% set icon = "⛔️" %}
+                        {% set status = 'Busy' %}
+                    {% else %}
+                        {% set badge = 'bg-dark' %}
+                        {% set icon = "🫥" %}
+                        {% set status = 'Offline' %}
+                    {% endif %}
+                    <span class="badge {{ badge }}">{{ icon }} {{ status }}</span>
+                {% else %}
+                    User lookup
+                {% endif %}
+            </h2>
+        </div>
+        {% if user is defined and user is not null  %}
+            <div class="col-12 col-sm-6 d-flex justify-content-end">
+                <div class="d-flex justify-content-between">
+                    {% if app.user.isChatAdmin and username is not null and username != '' and deactivateForm is not null %}
+                        <a data-bs-toggle="modal" data-bs-target="#deactivationForm" class="btn btn-outline-danger ms-3 {{ user.active == false and app.user.superAdmin == false ? 'disabled' : '' }}">{{ user.active ? 'Deactivate' : 'Re-activate' }}</a>
+                    {% endif %}
+                    <a data-bs-toggle="modal" data-bs-target="#messages" class="btn btn-outline-light ms-3">Messages</a>
+                    <a href="https://imagefap.com/profile/{{ username }}" target="_blank" class="btn btn-outline-info ms-3">Open IF profile</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <hr/>
+
+    {{ form_start(form) }}
+    <div class="row my-4">
+        <div class="col-12 col-md-6">
+            {{ form_row(form.username) }}
+        </div>
+        <div class="col-12 col-md-6">
+            <button class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+    {% if previouslyDeactivated is defined and previouslyDeactivated %}
+        <div class="alert alert-danger" role="alert">
+            This user was deactivated in RocketChat. Consider doing so again!
+        </div>
+    {% endif %}
+
+    {% if user is defined and user is not null %}
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="rounded-3 bg-body-secondary py-5 px-4">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h4>Mute history:</h4>
+                        <a class="btn btn-outline-danger" href="{{ path('mute_create', { 'username': user.username }) }}">Mute now</a>
+                    </div>
+                    <div class="text-muted mb-3">
+                        Total: {{ muteCount }}
+                    </div>
+                    <div class="table-responsive rounded-2">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Reason</th>
+                                <th>Channel(s)</th>
+                                <th>Duration</th>
+                                <th>Time ago</th>
+                                <th colspan="{{ app.user.superAdmin ? 2 : 1 }}">By</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for mute in mutes %}
+                                <tr>
+                                    <td>{{ mute.reason|nl2br }}</td>
+                                    <td>{{ mute.channelsString }}</td>
+                                    <td>{{ mute.duration }}</td>
+                                    <td>{{ mute.timeAgo }}</td>
+                                    <td>{{ mute.user.username }}</td>
+                                    {% if app.user.superAdmin %}<td><a href="{{ path('mute_delete', {'id': mute.id}) }}" class="btn btn-danger" data-bs-toggle="tooltip" data-placement="top" title="This will remove the user from the database without unmuting them in chat. Can be usefull for incorrect mutes, or deactivated users.">Delete</a></td>{% endif %}
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="table-info">This user has never been muted</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 ">
+                <div class="rounded-3 bg-body-tertiary py-5 px-4">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h4>Warning history:</h4>
+                        <a class="btn btn-outline-warning" href="{{ path('warning_create', { 'username': user.username }) }}">Warn now</a>
+                    </div>
+                    <div class="text-muted mb-3">
+                        Total: {{ warningCount }}
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Reason</th>
+                                <th>Time ago</th>
+                                <th colspan="{{ app.user.superAdmin ? 2 : 1 }}">By</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for warning in warnings %}
+                                <tr>
+                                    <td>{{ warning.reason|nl2br }}</td>
+                                    <td>{{ warning.timeAgo }}</td>
+                                    <td>{{ warning.user.username }}</td>
+                                    {% if app.user.superAdmin %}<td><a href="{{ path('warning_delete', {'id': warning.id}) }}" class="btn btn-warning btn-disable-click">Remove</a></td>{% endif %}
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="table-info">This user has never been warned</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="messages" tabindex="-1" aria-labelledby="messagesLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="messagesLabel">{{ username }} messages</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                {% for channel in channels %}
+                                    <div class="col-12 col-md-6">
+                                        <div
+                                            class="card message-card mb-3"
+                                            data-channel="{{ channel.identifier }}"
+                                            data-username="{{ username }}"
+                                            data-target="#modal-body-channel-{{ channel.identifier }}"
+                                        >
+                                            <div class="card-header">
+                                                <h5 class="card-title">{{ channel.name }}</h5>
+                                            </div>
+                                            <div class="card-body" id="channel-{{ channel.identifier }}">
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="spinner-border" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% for channel in channels %}
+                <div class="modal fade" id="channel-messages-{{ channel.identifier }}" tabindex="-1" aria-labelledby="channelMessagesLabel-{{ channel.identifier }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="channelMessagesLabel-{{ channel.identifier }}">{{ channel.name }} messages</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="modal-body-channel-{{ channel.identifier }}">
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="actions d-flex justify-content-end">
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#messages" class="btn btn-secondary">Back</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if app.user.isChatAdmin and deactivateForm is defined %}
+                <div class="modal fade" id="deactivationForm" tabindex="-1" aria-labelledby="deactivationForm-title" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            {{ form_start(deactivateForm) }}
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="deactivationForm-title">{{ user.active ? 'Deactivate' : 'Re-activate' }} {{ username }}</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="modal-body-deactivation">
+                                {{ form_row(deactivateForm.active, {row_attr: {class: 'd-none'}}) }}
+                                {% if user.active %}
+                                    {{ form_label(deactivateForm.reason) }}
+                                    {{ form_widget(deactivateForm.reason, {attr: {class: 'form-control'}}) }}<br/>
+                                {% else %}
+                                    Click save to re-activate the user
+                                {% endif %}
+                            </div>
+                            <div class="modal-footer">
+                                <div class="actions d-flex justify-content-end">
+                                    <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-dismiss="modal" aria-label="Close">Back</button>
+                                    <button type="submit" class="btn btn-primary ms-3">Save</button>
+                                </div>
+                            </div>
+
+                            {{ form_row(deactivateForm._token) }}
+                            {{ form_end(deactivateForm, { 'render_rest': false }) }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+parameters:
+    cache_app: mutes
+
+framework:
+    cache:
+        app:    cache.adapter.redis_tag_aware
+        system: cache.adapter.system
+
+        default_redis_provider: '%redis_dsn%'
+
+        prefix_seed:    "%cache_app%.%kernel.environment%"
+
+        pools:
+            cache.doctrine.orm.result:
+                adapter: cache.app
+            cache.doctrine.orm.system:
+                adapter: cache.system
+            readiness.cache:
+                adapter: cache.app

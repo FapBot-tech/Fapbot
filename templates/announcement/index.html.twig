@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Announcements{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-sm-6"><h2>All announcements</h2></div>
+        {% if app.user.admin %}
+            <div class="col-12 col-sm-6 d-block text-end"><a href="{{ path('announcements_create') }}" class="btn btn-primary float-right">Add announcement</a></div>
+        {% endif %}
+    </div>
+    <hr/>
+
+    {% if announcements is empty %}
+        <p>No active announcements found</p>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Channels</th>
+                        <th>Message</th>
+                        <th colspan="{{ app.user.admin ? '3' : '1' }}">Sends in:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for announcement in announcements %}
+                    <tr>
+                        <td>{{ announcement.channelsString }}</a></td>
+                        <td>
+                            {% if announcement.header is not null %}<strong class="text-secondary-emphasis">{{ announcement.header }}</strong><br/>{% endif %}
+                            {{ announcement.text|nl2br }}<br/>
+                            {% if announcement.links is not null %}
+                                <div class="text-bg-secondary p-2 mt-2 rounded-2">
+                                    {{ announcement.links|nl2br }}
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>{{ announcement.sendsIn }}</td>
+                        {% if app.user.chatAdmin %}
+                            <td><a href="{{ path('announcements_edit', {'id': announcement.id}) }}" class="btn btn-primary btn-disable-click">Edit</a></td>
+                        {% endif %}
+                        {% if app.user.admin %}
+                            <td><a href="{{ path('announcements_send', {'id': announcement.id}) }}" class="btn btn-warning btn-disable-click">Send now</a></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% endif %}
+{% endblock %}

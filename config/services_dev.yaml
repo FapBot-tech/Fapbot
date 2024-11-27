@@ -1,0 +1,9 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+#    rocket_chat.auth_token: 'PVJdt74wM-yndfak8gV7aBFF-mp3oYByq5I5G2IR6Jn'
+#    rocket_chat.user_id: 'Q73LNz3XJT6FZ34aZ'
+#    rocket_chat.base_url: 'https://chat.myxr.one/api/v1/'

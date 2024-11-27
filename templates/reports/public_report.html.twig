@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Report{% endblock %}
+
+{% block body %}
+    <h2>Report a message in from chat</h2>
+
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-12 col-md-6">
+            {{ form_row(form.reporterName) }}
+
+            {{ form_row(form.reasonSelect) }}
+        </div>
+
+        <div class="col-12 col-md-6">
+            {{ form_row(form.reportedName) }}
+
+            {{ form_row(form.reportedMessageLink) }}
+            {% if page_content %}
+                <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#guideModal">Show me how</a>
+            {% else %}
+                <small class="text-secondary">Hover over the message, then click the three dots on the right of your page. From the dropdown select "Copy link" and paste it here.</small>
+            {% endif %}
+        </div>
+    </div>
+
+    {{ form_row(form.reason) }}
+
+    <div class="row justify-content-end">
+        <div class="col-auto">
+            <button class="btn btn-success mt-4 btn-disable-click">Submit report</button>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+
+    {% if page_content %}
+        <div class="modal" tabindex="-1" id="guideModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ page_content.content|markdown }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

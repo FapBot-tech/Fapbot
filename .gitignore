@@ -1,0 +1,25 @@
+/.idea
+/bin
+!/bin/console
+/build
+/node_modules
+/var
+/vendor
+/public/build
+!/public/upload/.htaccess
+/mutes/stats
+.env
+/stats
+.gitconfig
+/config/packages/mattermost.yaml
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> symfony/webpack-encore-bundle ###
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
+/icon/*
