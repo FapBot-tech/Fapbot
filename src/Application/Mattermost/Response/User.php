@@ -13,6 +13,7 @@ final class User implements UserInterface
     public DateTimeImmutable $createdAt;
     public ?DateTimeImmutable $updatedAt;
     public ?DateTimeImmutable $deletedAt;
+    public ?DateTimeImmutable $lastActivityAt;
     public string $username;
     public string $authData;
     public string $authService;
@@ -32,6 +33,7 @@ final class User implements UserInterface
         $this->createdAt = DateTimeImmutable::createFromMutable($date->setTimestamp((int)floor($user['create_at'] / 1000)));
         $this->updatedAt = isset($user['update_at']) ? DateTimeImmutable::createFromMutable($date->setTimestamp((int)floor($user['update_at'] / 1000))) : null;
         $this->deletedAt = isset($user['delete_at']) ? DateTimeImmutable::createFromMutable($date->setTimestamp((int)floor($user['delete_at'] / 1000))) : null;
+        $this->lastActivityAt = isset($user['last_activity_at']) ? DateTimeImmutable::createFromMutable($date->setTimestamp((int)floor($user['last_activity_at'] / 1000))) : null;
         $this->username = $user['username'];
         $this->authData = $user['auth_data'];
         $this->authService = $user['auth_service'];

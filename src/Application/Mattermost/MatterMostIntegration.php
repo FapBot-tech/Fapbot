@@ -215,9 +215,9 @@ final class MatterMostIntegration implements IntegrationInterface
         return ApiLog::createFromResponse($response);
     }
 
-    public function getUserList(): ApiLog
+    public function getUserList(int $page = 1): ApiLog
     {
-        $response = $this->connector->getUsers(1);
+        $response = $this->connector->getUsers($page);
 
         return $this->apiLogRepository->save(ApiLog::createFromResponse($response));
     }
@@ -268,6 +268,15 @@ final class MatterMostIntegration implements IntegrationInterface
             $message->addAttachment($reason, true);
 
         $this->connector->sendMessageToChannel($message);
+
+        $response = $this->connector->deactivateUser($user->getId(), $username);
+
+        return $this->apiLogRepository->save(ApiLog::createFromResponse($response));
+    }
+
+    public function deleteUser(string $username): ApiLog
+    {
+        $user = $this->connector->getUserInfo($username, true)->getUser();
 
         $response = $this->connector->deactivateUser($user->getId(), $username);
 

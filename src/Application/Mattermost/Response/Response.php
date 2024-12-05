@@ -11,7 +11,7 @@ class Response implements ResponseInterface {
     // Required properties
     public bool $success;
     public string $response;
-    public string $link;
+    public string $link = '';
     public ?string $request = null;
 
     public ?Messages $messages = null;

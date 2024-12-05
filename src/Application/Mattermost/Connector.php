@@ -119,10 +119,11 @@ final class Connector {
 
     public function getUsers(int $page): Response
     {
-        $this->createOptions(sprintf('/users?page=%d&per_page=400', $page-1), 'GET');
+        $this->createOptions(sprintf('/users?page=%d&per_page=200&in_team=9rpb5tytqfn1drtm3cnkjd7efy&active=true&sort=last_activity_at', $page-1), 'GET');
 
         $response = curl_exec($this->curl);
         $json = json_decode($response, true);
+
 
         if (in_array('status_code', $json) && $json['status_code'] !== 200)
             return Response::createErrorResponse();
@@ -198,6 +199,20 @@ final class Connector {
         $newResult = curl_exec($this->curl);
         $newResult = json_decode($newResult, true);
         $newResult['request'] = $result;
+
+        return $this->createResponse(json_encode($newResult));
+    }
+
+    public function delete(string $userId, string $username): Response
+    {
+        $this->createOptions('/users/' . $userId, 'DELETE');
+
+        $this->cache->del([
+            sprintf('username_%s', $username),
+        ]);
+
+        $newResult = curl_exec($this->curl);
+        $newResult = json_decode($newResult, true);
 
         return $this->createResponse(json_encode($newResult));
     }
